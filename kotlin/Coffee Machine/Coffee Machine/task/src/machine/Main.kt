@@ -4,34 +4,89 @@ import java.util.*
 
 fun main() {
     val scanner = Scanner(System.`in`)
-    println("Write how many ml of water the coffee machine has:")
-    val actlWater = scanner.nextInt() //1550
-    println("Write how many ml of milk the coffee machine has:")
-    val actlMilk = scanner.nextInt() //299
-    println("Write how many grams of coffee beans the coffee machine has:")
-    val actlCoffee = scanner.nextInt() //300
-    println("Write how many cups of coffee you will need:")
-    val cups = scanner.nextInt() //3
-    val water = 200
-    val milk = 50
-    val beans = 15
-    val waterUnits = actlWater / water //300 / 200 = 1
-    val milkUnits = actlMilk / milk //65 / 50 = 1
-    val coffeeUnits = actlCoffee / beans // 111 / 15 = 7
-    var actual = if (waterUnits > milkUnits) milkUnits else waterUnits //
-    actual = if (coffeeUnits > actual) actual else coffeeUnits
-
-    when {
-        cups == actual -> {
-            println("Yes, I can make that amount of coffee")
+    var money = 550
+    var water = 400
+    var milk = 540
+    var beans = 120
+    var cups = 9
+    printState(water, milk, beans, cups, money)
+    when (getAction(scanner)) {
+        "buy" -> {
+            when (selectCoffee(scanner)) {
+                1 -> {
+                    water -= 250
+                    beans -= 16
+                    cups -= 1
+                    money += 4
+                }
+                2 -> {
+                    water -= 350
+                    milk -= 75
+                    beans -= 20
+                    cups -= 1
+                    money += 7
+                }
+                3 -> {
+                    water -= 200
+                    milk -= 100
+                    beans -= 12
+                    cups -= 1
+                    money += 6
+                }
+            }
         }
-        cups > actual -> {
-            println("No, I can make only $actual cups of coffee")
+        "fill" -> {
+            water += fillWaterInMachine(scanner)
+            milk += fillMilkInMachine(scanner)
+            beans += fillCoffeeInMachine(scanner)
+            cups += fillCupsInMachine(scanner)
         }
-        else -> {
-            println("Yes, I can make that amount of coffee (and even ${actual - cups} more than that)")
+        "take" -> {
+            println("I gave you \$$money")
+            money = 0
         }
     }
+
+    printState(water, milk, beans, cups, money)
+}
+
+fun selectCoffee(scanner: Scanner): Int {
+    println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:")
+    return scanner.nextInt()
+}
+
+fun fillWaterInMachine(scanner: Scanner): Int {
+    println("Write how many ml of water do you want to add:")
+    return scanner.nextInt()
+}
+
+fun fillMilkInMachine(scanner: Scanner): Int {
+    println("Write how many ml of milk do you want to add:")
+    return scanner.nextInt()
+}
+
+fun fillCoffeeInMachine(scanner: Scanner): Int {
+    println("Write how many grams of coffee beans do you want to add:")
+    return scanner.nextInt()
+}
+
+fun fillCupsInMachine(scanner: Scanner): Int {
+    println("Write how many disposable cups of coffee do you want to add:")
+    return scanner.nextInt()
+}
+
+fun getAction(scanner: Scanner): String {
+    println("Write action (buy, fill, take): ")
+    return scanner.next()
+}
+
+private fun printState(water: Int, milk: Int, beans: Int, cups: Int, money: Int) {
+    println("The coffee machine has:")
+    println("$water of water")
+    println("$milk of milk")
+    println("$beans of coffee beans")
+    println("$cups of disposable cups")
+    println("$money of money")
 }
 
 
